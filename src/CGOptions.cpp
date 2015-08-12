@@ -78,6 +78,9 @@ int CGOptions::pointer_size_ = 0;
 //float_test
 DEFINE_GETTER_SETTER_BOOL(float_test)
 
+//memcpy
+DEFINE_GETTER_SETTER_BOOL(memcpy_enabled)
+
 DEFINE_GETTER_SETTER_BOOL(compute_hash)
 DEFINE_GETTER_SETTER_BOOL(depth_protect)
 DEFINE_GETTER_SETTER_INT (max_split_files)
@@ -208,6 +211,9 @@ CGOptions::set_default_settings(void)
 {
 	//float_test
 	float_test(false);
+
+	//memcpy
+	memcpy_enabled(false);
 
 	set_platform_specific_options();
 	compute_hash(true);

@@ -64,6 +64,7 @@
 #include "StatementContinue.h"
 #include "StatementGoto.h"
 #include "StatementArrayOp.h"
+#include "StatementMemcpy.h"  // memcpy
 #include "Variable.h"
 #include "ArrayVariable.h"
 #include "VectorFilter.h"
@@ -294,6 +295,9 @@ Statement::make_random(CGContext &cg_context,
 		break;
 	case eArrayOp:
 		s = StatementArrayOp::make_random(cg_context);
+		break;
+	case eMemcpy:
+		s = StatementMemcpy::make_random(cg_context);
 		break;
 	}
 

@@ -360,6 +360,14 @@ main(int argc, char **argv)
 
 		///
 
+		/// memcpy
+
+		if (strcmp (argv[i], "--memcpy") == 0) {
+			CGOptions::memcpy_enabled(true);
+			continue;
+		}
+
+		///
 
 
 		if (strcmp (argv[i], "--help") == 0 ||

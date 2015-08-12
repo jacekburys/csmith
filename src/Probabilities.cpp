@@ -810,6 +810,14 @@ Probabilities::set_default_statement_prob()
 		SET_SINGLE_NAME("statement_goto_prob", Goto, 0);
 		SET_SINGLE_NAME("statement_arrayop_prob", ArrayOp, 0);
 	}
+
+	//memcpy probability
+	if(CGOptions::memcpy_enabled()){
+		SET_SINGLE_NAME("statement_memcpy", Memcpy, 20);
+	}else{
+		SET_SINGLE_NAME("statement_memcpy", Memcpy, 0);
+	}
+
 	// use the remaining probabilities for assignments
 	SET_SINGLE_NAME("statement_assign_prob", Assign, 100);
 

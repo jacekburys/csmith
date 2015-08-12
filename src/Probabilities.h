@@ -77,6 +77,7 @@ enum ProbName {
 	pContinueProb,
 	pBreakProb,
 	pGotoProb,
+	pMemcpyProb,    // memcpy
 	pArrayOpProb,
 
 	// group for assignment ops

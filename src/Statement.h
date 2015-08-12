@@ -78,6 +78,7 @@ enum eStatementType
 	eContinue,
 	eBreak,
 	eGoto,
+	eMemcpy,  // memcpy
 	eArrayOp
 //  ..more?  try, catch, throw
 //	eHash,

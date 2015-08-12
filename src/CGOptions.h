@@ -74,6 +74,9 @@ public:
 	static bool float_test(void);
 	static bool float_test(bool p);
 
+	static bool memcpy_enabled(void);
+	static bool memcpy_enabled(bool p);
+
 	static bool compute_hash(void);
 	static bool compute_hash(bool p);
 
@@ -478,6 +481,9 @@ private:
 
 	//float_test
 	static bool float_test_;
+
+	//memcpy
+	static bool memcpy_enabled_;
 
 	// Until I do this right, just make them all static.
 	static bool	compute_hash_;
