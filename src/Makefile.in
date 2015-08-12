@@ -141,6 +141,7 @@ am_csmith_OBJECTS = csmith-AbsExtension.$(OBJEXT) \
 	csmith-StatementContinue.$(OBJEXT) \
 	csmith-StatementExpr.$(OBJEXT) csmith-StatementFor.$(OBJEXT) \
 	csmith-StatementGoto.$(OBJEXT) csmith-StatementIf.$(OBJEXT) \
+	csmith-StatementMemcpy.$(OBJEXT) \
 	csmith-StatementReturn.$(OBJEXT) csmith-StringUtils.$(OBJEXT) \
 	csmith-Type.$(OBJEXT) csmith-Variable.$(OBJEXT) \
 	csmith-VariableSelector.$(OBJEXT) \
@@ -502,6 +503,8 @@ csmith_SOURCES = \
 	StatementGoto.h \
 	StatementIf.cpp \
 	StatementIf.h \
+	StatementMemcpy.cpp \
+	StatementMemcpy.h \
 	StatementReturn.cpp \
 	StatementReturn.h \
 	StringUtils.cpp \
@@ -698,6 +701,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csmith-StatementFor.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csmith-StatementGoto.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csmith-StatementIf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csmith-StatementMemcpy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csmith-StatementReturn.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csmith-StringUtils.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csmith-Type.Po@am__quote@
@@ -1680,6 +1684,20 @@ csmith-StatementIf.obj: StatementIf.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='StatementIf.cpp' object='csmith-StatementIf.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(csmith_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o csmith-StatementIf.obj `if test -f 'StatementIf.cpp'; then $(CYGPATH_W) 'StatementIf.cpp'; else $(CYGPATH_W) '$(srcdir)/StatementIf.cpp'; fi`
+
+csmith-StatementMemcpy.o: StatementMemcpy.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(csmith_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT csmith-StatementMemcpy.o -MD -MP -MF $(DEPDIR)/csmith-StatementMemcpy.Tpo -c -o csmith-StatementMemcpy.o `test -f 'StatementMemcpy.cpp' || echo '$(srcdir)/'`StatementMemcpy.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csmith-StatementMemcpy.Tpo $(DEPDIR)/csmith-StatementMemcpy.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='StatementMemcpy.cpp' object='csmith-StatementMemcpy.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(csmith_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o csmith-StatementMemcpy.o `test -f 'StatementMemcpy.cpp' || echo '$(srcdir)/'`StatementMemcpy.cpp
+
+csmith-StatementMemcpy.obj: StatementMemcpy.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(csmith_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT csmith-StatementMemcpy.obj -MD -MP -MF $(DEPDIR)/csmith-StatementMemcpy.Tpo -c -o csmith-StatementMemcpy.obj `if test -f 'StatementMemcpy.cpp'; then $(CYGPATH_W) 'StatementMemcpy.cpp'; else $(CYGPATH_W) '$(srcdir)/StatementMemcpy.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/csmith-StatementMemcpy.Tpo $(DEPDIR)/csmith-StatementMemcpy.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='StatementMemcpy.cpp' object='csmith-StatementMemcpy.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(csmith_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o csmith-StatementMemcpy.obj `if test -f 'StatementMemcpy.cpp'; then $(CYGPATH_W) 'StatementMemcpy.cpp'; else $(CYGPATH_W) '$(srcdir)/StatementMemcpy.cpp'; fi`
 
 csmith-StatementReturn.o: StatementReturn.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(csmith_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT csmith-StatementReturn.o -MD -MP -MF $(DEPDIR)/csmith-StatementReturn.Tpo -c -o csmith-StatementReturn.o `test -f 'StatementReturn.cpp' || echo '$(srcdir)/'`StatementReturn.cpp

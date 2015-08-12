@@ -173,6 +173,8 @@ csmith_SOURCES = \
 	StatementGoto.h \
 	StatementIf.cpp \
 	StatementIf.h \
+	StatementMemcpy.cpp \
+	StatementMemcpy.h \
 	StatementReturn.cpp \
 	StatementReturn.h \
 	StringUtils.cpp \
