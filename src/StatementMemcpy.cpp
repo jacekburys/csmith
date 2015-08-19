@@ -52,8 +52,9 @@ StatementMemcpy::make_random(CGContext &cg_context)
 	FactMgr* fm = get_fact_mgr(&cg_context);
 	assert(fm);
 
-	Type* type;
+	const Type* type;
 
+	/*
 	//choose type : this is copied from choose_random_pointer_type
 	//              except it won't choose pointers to pointers
 	const Type* t;
@@ -68,22 +69,37 @@ StatementMemcpy::make_random(CGContext &cg_context)
 
 	type = Type::find_pointer_type(t, true);
 	//
+	 */
+
+	do{
+		type = Type::choose_random_simple();
+	}while(type->simple_type == eVoid);
+
 
 	CVQualifiers qf;
 	qf.wildcard = true;
 
-	ExpressionVariable* dst =
-			ExpressionVariable::make_random(cg_context, type, &qf, true, false);
-
-	ExpressionVariable* src;
+	ExpressionVariable* dst;
 	while(true){
-		src = ExpressionVariable::make_random(cg_context, type, &qf, true, false);
-		if(dst->to_string() != src->to_string()){
+		dst = ExpressionVariable::make_random(cg_context, type, &qf, true, false);
+		if(!cg_context.is_nonwritable(dst->get_var()) && !dst->get_var()->isBitfield_){
 			break;
 		}
 	}
 
 
+	ExpressionVariable* src;
+	while(true){
+		src = ExpressionVariable::make_random(cg_context, type, &qf, true, false);
+		if(!src->get_var()->isBitfield_ && dst->to_string() != src->to_string()
+			&& dst->get_type().SizeInBytes() == src->get_type().SizeInBytes()){
+			break;
+		}
+	}
+
+
+	cg_context.read_var(src->get_var());
+	cg_context.write_var(dst->get_var());
 
 	assert(dst->get_type().SizeInBytes() == src->get_type().SizeInBytes());
 	assert(dst->to_string() != src->to_string());
@@ -99,22 +115,27 @@ StatementMemcpy::Output(std::ostream &out, FactMgr* /*fm*/, int indent) const
 	out << "/*MEMCPY*/" << endl;
 
 	output_tab(out, indent);
-	out << "if(";
+	out << "if(&";
+	/*
 	var_dst.Output(out);
 	out << " != NULL && ";
 	var_src.Output(out);
 	out << " != NULL && ";
+	*/
 	var_dst.Output(out);
-	out << " != ";
+	out << " != &";
 	var_src.Output(out);
 	out << ")" << endl;
 
+	string sizeofstring;
+	var_src.get_type().get_base_type()->get_type_sizeof_string(sizeofstring);
+
 	output_tab(out, indent+1);
-	out << "memcpy(";
+	out << "memcpy(&";
 	var_dst.Output(out);
-	out << ", ";
+	out << ", &";
 	var_src.Output(out);
-	out << ", ";
-	out << var_src.get_type().get_base_type()->SizeInBytes() << ");";
+	out << ", " << sizeofstring << ");";
+	//out << var_src.get_type().get_base_type()->SizeInBytes() << ");";
 	outputln(out);
 }
