@@ -85,21 +85,25 @@ StatementMemcpy::make_random(CGContext &cg_context)
 		if(!cg_context.is_nonwritable(dst->get_var()) && !dst->get_var()->isBitfield_){
 			break;
 		}
+		delete dst;
 	}
+
+	cg_context.write_var(dst->get_var());
 
 
 	ExpressionVariable* src;
 	while(true){
 		src = ExpressionVariable::make_random(cg_context, type, &qf, true, false);
-		if(!src->get_var()->isBitfield_ && dst->to_string() != src->to_string()
-			&& dst->get_type().SizeInBytes() == src->get_type().SizeInBytes()){
+		if(!cg_context.is_nonreadable(src->get_var()) && !src->get_var()->isBitfield_ &&
+			dst->to_string() != src->to_string() && dst->get_type().SizeInBytes() == src->get_type().SizeInBytes()){
 			break;
 		}
+		delete src;
 	}
 
 
 	cg_context.read_var(src->get_var());
-	cg_context.write_var(dst->get_var());
+
 
 	assert(dst->get_type().SizeInBytes() == src->get_type().SizeInBytes());
 	assert(dst->to_string() != src->to_string());
