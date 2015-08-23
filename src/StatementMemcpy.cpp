@@ -52,84 +52,98 @@ StatementMemcpy::make_random(CGContext &cg_context)
 	FactMgr* fm = get_fact_mgr(&cg_context);
 	assert(fm);
 
+	Effect running_eff_context(cg_context.get_effect_context());
+	Effect src_accum, dst_accum;
+	CGContext src_cg_context(cg_context, running_eff_context, &src_accum);
+
+	Variable* src = NULL;
+	Variable* dst = NULL;
+	vector<const Variable*> dummy;
+
 	const Type* type;
-
-	/*
-	//choose type : this is copied from choose_random_pointer_type
-	//              except it won't choose pointers to pointers
-	const Type* t;
-	do{
-		t = Type::choose_random();
-	} while(t->get_base_type()->eType == eStruct || t->get_base_type()->eType == eUnion);
-	ERROR_GUARD(NULL);
-	if (t->eType == eSimple) {
-		t = get_int_type();
-		ERROR_GUARD(NULL);
-	}
-
-	type = Type::find_pointer_type(t, true);
-	//
-	 */
 
 	do{
 		type = Type::choose_random_simple();
 	}while(type->simple_type == eVoid);
 
+	assert(type && "type is null");
 
-	CVQualifiers qf;
-	qf.wildcard = true;
-
-	ExpressionVariable* dst;
-	while(true){
-		dst = ExpressionVariable::make_random(cg_context, type, &qf, true, false);
-		if(!cg_context.is_nonwritable(dst->get_var()) && !dst->get_var()->isBitfield_){
-			break;
-		}
-		delete dst;
-	}
-
-	cg_context.write_var(dst->get_var());
+	CVQualifiers qfer;
+	do{
+		qfer = CVQualifiers::random_qualifiers(type);
+	}while(qfer.is_const());
 
 
-	ExpressionVariable* src;
-	while(true){
-		src = ExpressionVariable::make_random(cg_context, type, &qf, true, false);
-		if(!cg_context.is_nonreadable(src->get_var()) && !src->get_var()->isBitfield_ &&
-			dst->to_string() != src->to_string() && dst->get_type().SizeInBytes() == src->get_type().SizeInBytes()){
-			break;
-		}
-		delete src;
-	}
+	do{
+		src = VariableSelector::select(Effect::READ, src_cg_context, type, &qfer, dummy, eExact);
+	}while(src == NULL || src->isBitfield_);
 
+	running_eff_context.add_effect(src_accum);
 
-	cg_context.read_var(src->get_var());
+	cg_context.merge_param_context(src_cg_context, true);
+	running_eff_context.write_var_set(src_accum.get_lhs_write_vars());
 
+	ExpressionVariable* exp_src = new ExpressionVariable(*src);
 
-	assert(dst->get_type().SizeInBytes() == src->get_type().SizeInBytes());
+	CGContext dst_cg_context(cg_context, running_eff_context, &dst_accum);
+	dst_cg_context.get_effect_stm() = src_cg_context.get_effect_stm();
+	dst_cg_context.curr_rhs = exp_src;
+
+	assert(src && "src is null");
+
+	do{
+		dst = VariableSelector::select(Effect::WRITE, dst_cg_context, type, &qfer, dummy, eExact);
+	}while(dst == NULL || dst->isBitfield_
+			|| dst->to_string() == src->to_string() || dst->type->SizeInBytes() != src->type->SizeInBytes());
+
+	assert(dst && "dst is null");
+
+	ExpressionVariable* exp_dst = new ExpressionVariable(*dst);
+
+	assert(dst->type->SizeInBytes() == src->type->SizeInBytes());
 	assert(dst->to_string() != src->to_string());
 
 
-	return new StatementMemcpy(cg_context.get_current_block(), *dst, *src);
+
+	StatementMemcpy* res = new StatementMemcpy(curr_func->body, *exp_dst, *exp_src);
+
+	//res->Output(cerr, NULL, 0);
+
+	return res;// new StatementMemcpy(curr_func->body, exp_dst, exp_src);
 }
 
 void
 StatementMemcpy::Output(std::ostream &out, FactMgr* /*fm*/, int indent) const
 {
+
 	output_tab(out, indent);
 	out << "/*MEMCPY*/" << endl;
 
 	output_tab(out, indent);
+
 	out << "if(&";
+
 	/*
 	var_dst.Output(out);
 	out << " != NULL && ";
 	var_src.Output(out);
 	out << " != NULL && ";
 	*/
+
+	//assert(var_dst != NULL && "var_dst is NULL");
+
 	var_dst.Output(out);
+
+
+
 	out << " != &";
+
+	//assert(var_src != NULL && "var_src is NULL");
+
 	var_src.Output(out);
 	out << ")" << endl;
+
+
 
 	string sizeofstring;
 	var_src.get_type().get_base_type()->get_type_sizeof_string(sizeofstring);
