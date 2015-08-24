@@ -63,7 +63,7 @@ StatementMemcpy::make_random(CGContext &cg_context)
 	const Type* type;
 
 	do{
-		type = Type::choose_random_simple();
+		type = Type::SelectLType(!cg_context.get_effect_context().is_side_effect_free(), eSimpleAssign);
 	}while(type->simple_type == eVoid);
 
 	assert(type && "type is null");
@@ -109,6 +109,8 @@ StatementMemcpy::make_random(CGContext &cg_context)
 
 
 	ExpressionVariable* exp_dst = new ExpressionVariable(*dst);
+
+	cg_context.merge_param_context(dst_cg_context, true);
 
 	assert(dst->type->SizeInBytes() == src->type->SizeInBytes());
 	assert(dst->to_string() != src->to_string());
@@ -156,14 +158,15 @@ StatementMemcpy::Output(std::ostream &out, FactMgr* /*fm*/, int indent) const
 
 
 	string sizeofstring;
-	var_src.get_type().get_base_type()->get_type_sizeof_string(sizeofstring);
+	//var_src.get_type().get_base_type()->get_type_sizeof_string(sizeofstring);
+	var_dst.get_type().get_type_sizeof_string(sizeofstring);
 
 	output_tab(out, indent+1);
 	out << "memcpy(&";
 	var_dst.Output(out);
 	out << ", &";
 	var_src.Output(out);
-	out << ", " << sizeofstring << ");";
+	out << ", " << var_dst.get_type().SizeInBytes() << ");";
 	//out << var_src.get_type().get_base_type()->SizeInBytes() << ");";
 	outputln(out);
 }
