@@ -56,8 +56,8 @@ StatementMemcpy::make_random(CGContext &cg_context)
 	Effect src_accum, dst_accum;
 	CGContext src_cg_context(cg_context, running_eff_context, &src_accum);
 
-	Variable* src = NULL;
-	Variable* dst = NULL;
+	const Variable* src = NULL;
+	const Variable* dst = NULL;
 	vector<const Variable*> dummy;
 
 	const Type* type;
@@ -85,10 +85,12 @@ StatementMemcpy::make_random(CGContext &cg_context)
 
 	ExpressionVariable* exp_src = new ExpressionVariable(*src);
 
+
 	CGContext dst_cg_context(cg_context, running_eff_context, &dst_accum);
 	dst_cg_context.get_effect_stm() = src_cg_context.get_effect_stm();
 	dst_cg_context.curr_rhs = exp_src;
 
+	/*
 	assert(src && "src is null");
 
 	do{
@@ -97,6 +99,14 @@ StatementMemcpy::make_random(CGContext &cg_context)
 			|| dst->to_string() == src->to_string() || dst->type->SizeInBytes() != src->type->SizeInBytes());
 
 	assert(dst && "dst is null");
+	*/
+
+	do{
+		Lhs* lhs = Lhs::make_random(dst_cg_context, type, &qfer, false, true);
+		dst = lhs->get_var();
+	}while(dst == NULL || dst->isBitfield_
+			|| dst->to_string() == src->to_string() || dst->type->SizeInBytes() != src->type->SizeInBytes());
+
 
 	ExpressionVariable* exp_dst = new ExpressionVariable(*dst);
 
