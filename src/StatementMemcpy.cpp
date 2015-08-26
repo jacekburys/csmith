@@ -101,20 +101,26 @@ StatementMemcpy::make_random(CGContext &cg_context)
 	assert(dst && "dst is null");
 	*/
 
+
 	do{
 		Lhs* lhs = Lhs::make_random(dst_cg_context, type, &qfer, false, true);
 		dst = lhs->get_var();
-	}while(dst == NULL || dst->isBitfield_
+	}while(dst == NULL || dst->isBitfield_ || dst->type->get_indirect_level() != src->type->get_indirect_level()
 			|| dst->to_string() == src->to_string() || dst->type->SizeInBytes() != src->type->SizeInBytes());
 
+
+	if(src->type->eType == eStruct){
+		cerr << "mem struct" << endl;
+	}
 
 	ExpressionVariable* exp_dst = new ExpressionVariable(*dst);
 
 	cg_context.merge_param_context(dst_cg_context, true);
 
+
+	assert(dst->type->get_indirect_level() == src->type->get_indirect_level());
 	assert(dst->type->SizeInBytes() == src->type->SizeInBytes());
 	assert(dst->to_string() != src->to_string());
-
 
 
 	StatementMemcpy* res = new StatementMemcpy(curr_func->body, *exp_dst, *exp_src);
@@ -147,14 +153,12 @@ StatementMemcpy::Output(std::ostream &out, FactMgr* /*fm*/, int indent) const
 	var_dst.Output(out);
 
 
-
 	out << " != &";
 
 	//assert(var_src != NULL && "var_src is NULL");
 
 	var_src.Output(out);
 	out << ")" << endl;
-
 
 
 	string sizeofstring;
@@ -166,7 +170,7 @@ StatementMemcpy::Output(std::ostream &out, FactMgr* /*fm*/, int indent) const
 	var_dst.Output(out);
 	out << ", &";
 	var_src.Output(out);
-	out << ", " << var_dst.get_type().SizeInBytes() << ");";
-	//out << var_src.get_type().get_base_type()->SizeInBytes() << ");";
+	//out << ", " << var_dst.get_type().SizeInBytes() << ");";
+	out << ", " << sizeofstring << ");";
 	outputln(out);
 }
